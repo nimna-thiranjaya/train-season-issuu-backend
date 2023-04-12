@@ -14,7 +14,9 @@ def create_app():
     api = Api(app=app)
 
     from modules.officer.route import create_officer_routes
+    from modules.season.route import create_season_routes
 
+    create_season_routes(api=api)
     create_officer_routes(api=api)
 
     db.init_app(app)

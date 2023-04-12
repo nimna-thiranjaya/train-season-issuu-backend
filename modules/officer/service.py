@@ -22,7 +22,6 @@ def create_user(request, input_data):
 
     new_officer = Officer(**input_data)  # **input_data is the same as email=input_data["email"], ect
     new_officer.hash_password()
-    print(new_officer)
     db.session.add(new_officer)
     db.session.commit()
     del input_data["password"]
@@ -30,7 +29,6 @@ def create_user(request, input_data):
 
 
 def login_user(request, input_data):
-
     get_user = Officer.query.filter_by(email=input_data["email"]).first()
 
     if get_user is None:
@@ -49,3 +47,50 @@ def login_user(request, input_data):
         return generate_response(input_data, "Login successful", HTTP_200_OK)
     else:
         return generate_response(None, "Invalid password!", HTTP_401_UNAUTHORIZED)
+
+
+def user_Profile(request, auth):
+    if auth:
+        try:
+            token = auth.split(" ")[1]
+            is_token_valid = TokenGenerator.check_token(token)
+            if is_token_valid:
+                decode_token = TokenGenerator.decode_token(token)
+
+                get_user = Officer.query.filter_by(off_id=decode_token["id"]).first()
+
+                officer = {
+                    "off_id": get_user.off_id,
+                    "email": get_user.email,
+                    "name": get_user.name,
+                    "contact": get_user.contact,
+                    "nic": get_user.nic,
+                }
+
+                return generate_response(officer, "User profile fletched", HTTP_200_OK)
+            else:
+                return generate_response(None, "Invalid token!", HTTP_401_UNAUTHORIZED)
+        except:
+            return generate_response(None, "Invalid token!", HTTP_401_UNAUTHORIZED)
+    else:
+        return generate_response(None, "Token required!", HTTP_401_UNAUTHORIZED)
+
+
+def user_delete(request, auth):
+    if auth:
+        try:
+            token = auth.split(" ")[1]
+            is_token_valid = TokenGenerator.check_token(token)
+            if is_token_valid:
+                decode_token = TokenGenerator.decode_token(token)
+
+                get_user = Officer.query.filter_by(off_id=decode_token["id"]).first()
+                db.session.delete(get_user)
+                db.session.commit()
+                return generate_response(None, "User deleted", HTTP_200_OK)
+            else:
+                return generate_response(None, "Invalid token!", HTTP_401_UNAUTHORIZED)
+        except:
+            return generate_response(None, "Invalid token!", HTTP_401_UNAUTHORIZED)
+    else:
+        return generate_response(None, "Token required!", HTTP_401_UNAUTHORIZED)
