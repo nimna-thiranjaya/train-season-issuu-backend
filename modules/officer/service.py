@@ -59,13 +59,9 @@ def user_Profile(request, auth):
 
                 get_user = Officer.query.filter_by(off_id=decode_token["id"]).first()
 
-                officer = {
-                    "off_id": get_user.off_id,
-                    "email": get_user.email,
-                    "name": get_user.name,
-                    "contact": get_user.contact,
-                    "nic": get_user.nic,
-                }
+                officer = get_user.__dict__
+                del officer["_sa_instance_state"]
+                del officer["password"]
 
                 return generate_response(officer, "User profile fletched", HTTP_200_OK)
             else:

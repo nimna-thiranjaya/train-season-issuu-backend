@@ -22,3 +22,18 @@ class Season(db.Model):
 
     def __repr__(self):
         return "<Season {}>".format(self.s_id)
+
+
+class IssuedDetails(db.Model):
+    __tablename__ = 'ISSUED_DETAILS'
+    s_id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=False)
+    off_id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+
+    def __init__(self, **kwargs):
+        self.s_id = kwargs.get("s_id")
+        self.off_id = kwargs.get("off_id")
+        self.date = kwargs.get("date")
+
+    def __repr__(self):
+        return "<issuedDetails {}>".format(self.s_id, self.off_id)
