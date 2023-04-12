@@ -1,6 +1,4 @@
-"""Initialize Flask app."""
 import os
-from config import Config
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -12,9 +10,12 @@ def create_app():
     """Construct the core application."""
     app = Flask(__name__, instance_relative_config=False)
 
-    app.config.from_object(Config)
-
+    app.config.from_object("config.Config")
     api = Api(app=app)
+
+    from modules.officer.route import create_officer_routes
+
+    create_officer_routes(api=api)
 
     db.init_app(app)
 
@@ -26,4 +27,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG)
+    app.run(host="0.0.0.0", port=8080)
