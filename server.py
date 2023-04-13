@@ -14,13 +14,17 @@ def create_app():
     app.config.from_object("config.Config")
     api = Api(app=app)
 
+    #import routes
     from modules.officer.route import create_officer_routes
     from modules.season.route import create_season_routes
     from modules.passenger.route import create_passenger_routes
+    from modules.payment.route import create_payment_routes
 
+    #call routes
     create_passenger_routes(api=api)
     create_season_routes(api=api)
     create_officer_routes(api=api)
+    create_payment_routes(api=api)
 
     db.init_app(app)
 
