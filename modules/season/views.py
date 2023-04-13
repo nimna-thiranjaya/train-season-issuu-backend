@@ -50,5 +50,6 @@ class RenewSeason(Resource):
         :return: JSON object
         """
         input_data = request.get_json()
-        response, status = renew_season(request, input_data, s_id)
+        auth = request.headers.get("Authorization")
+        response, status = renew_season(request, input_data, s_id, auth)
         return make_response(response, status)

@@ -10,6 +10,7 @@ class Season(db.Model):
     end_station = db.Column(db.String, nullable=False)
     renewal_date = db.Column(db.Date, nullable=False)
     expiration_date = db.Column(db.Date, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     def __init__(self, **kwargs):
@@ -19,6 +20,7 @@ class Season(db.Model):
         self.end_station = kwargs.get("end_station")
         self.renewal_date = kwargs.get("renewal_date")
         self.expiration_date = kwargs.get("expiration_date")
+        self.price = kwargs.get("price")
 
     def __repr__(self):
         return "<Season {}>".format(self.s_id)
@@ -36,4 +38,4 @@ class IssuedDetails(db.Model):
         self.date = kwargs.get("date")
 
     def __repr__(self):
-        return "<issuedDetails {}>".format(self.s_id, self.off_id)
+        return "<issuedDetails {}>".format(self.s_id)
